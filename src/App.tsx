@@ -1,8 +1,18 @@
-import React from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
 import "./App.css";
 
+import ChatRoom from "./pages/chat/ChatRoom";
+
+const router = createBrowserRouter([
+  {
+    path: "/chat",
+    element: <ChatRoom />,
+  },
+]);
+
 function App() {
-  return <div className="bg-red-500">Hello</div>;
+  return <RouterProvider router={router} />;
 }
 
 export default App;
