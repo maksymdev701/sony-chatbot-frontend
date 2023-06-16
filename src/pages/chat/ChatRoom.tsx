@@ -10,27 +10,27 @@ const ChatItem = ({ type, text }: MessageType, index: number) => {
   switch (type) {
     case "human":
       return (
-        <div className="flex max-w-[70%] gap-2" key={index}>
+        <div className="flex max-w-[70%] gap-2 items-center" key={index}>
           <img
             alt="user"
             width={30}
-            className="h-7"
+            className="h-5"
             src="/assets/images/user.png"
           />
-          <p className="bg-blue-400 rounded p-2">{text}</p>
+          <p className="bg-blue-400 rounded px-4 py-2 text-white">{text}</p>
         </div>
       );
     case "bot":
       return (
-        <div className="flex justify-end" key={index}>
+        <div className="flex justify-end  items-center" key={index}>
           <div className="flex flex-row-reverse max-w-[70%] gap-2">
             <img
               alt="bot"
               width={30}
-              className="h-9"
+              className="h-7"
               src="/assets/images/bot.png"
             />
-            <p className="bg-gray-400 rounded p-2">{text}</p>
+            <p className="bg-gray-400 rounded px-4 py-2 text-white">{text}</p>
           </div>
         </div>
       );
@@ -57,7 +57,7 @@ const ChatRoom = () => {
 
   useEffect(() => {
     if (lastMessage !== null) {
-      setHistory([...history, { type: "bot", text: lastMessage.data }]);
+      setHistory((h) => h.concat({ type: "bot", text: lastMessage.data }));
       setLoading(false);
       setTimeout(() => {
         if (historyBoxRef.current)
@@ -87,10 +87,10 @@ const ChatRoom = () => {
   };
 
   return (
-    <div className="p-4 max-w-7xl flex flex-col h-screen gap-3">
+    <div className="p-4 max-w-7xl flex flex-col flex-1 gap-3">
       <div
         ref={historyBoxRef}
-        className="flex-1 border p-4 overflow-auto chat-history flex flex-col gap-2 shadow-lg shadow-cyan-950"
+        className="flex-1 border p-4 overflow-auto chat-history text-sm flex flex-col gap-2 shadow-lg shadow-cyan-950"
       >
         {history.map((item, index) => {
           return ChatItem(item, index);
