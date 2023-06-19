@@ -1,4 +1,10 @@
 import { useEffect, useRef, useState } from "react";
+import {
+  PhoneIcon,
+  VideoCameraIcon,
+  EllipsisVerticalIcon,
+  PaperAirplaneIcon,
+} from "@heroicons/react/24/solid";
 import useWebSocket from "react-use-websocket";
 
 interface MessageType {
@@ -6,32 +12,32 @@ interface MessageType {
   text: string;
 }
 
+const Thinking = () => {
+  return (
+    <div className="flex p-3 w-fit gap-1">
+      <div className="w-1 h-1 rounded-[50%] bg-[#b7b7b7] dot_1"></div>
+      <div className="w-1 h-1 rounded-[50%] bg-[#b7b7b7] dot_2"></div>
+      <div className="w-1 h-1 rounded-[50%] bg-[#b7b7b7] dot_3"></div>
+    </div>
+  );
+};
+
 const ChatItem = ({ type, text }: MessageType, index: number) => {
   switch (type) {
     case "human":
       return (
-        <div className="flex max-w-[70%] gap-2 items-center" key={index}>
-          <img
-            alt="user"
-            width={30}
-            className="h-5"
-            src="/assets/images/user.png"
-          />
-          <p className="bg-blue-400 rounded px-4 py-2 text-white">{text}</p>
+        <div className="flex mb-1" key={index}>
+          <p className="bg-[#b2b2b2] py-2 px-4 rounded-2xl w-fit text-[#f9fbff]">
+            {text}
+          </p>
         </div>
       );
     case "bot":
       return (
-        <div className="flex justify-end  items-center" key={index}>
-          <div className="flex flex-row-reverse max-w-[70%] gap-2">
-            <img
-              alt="bot"
-              width={30}
-              className="h-7"
-              src="/assets/images/bot.png"
-            />
-            <p className="bg-gray-400 rounded px-4 py-2 text-white">{text}</p>
-          </div>
+        <div className="flex justify-end mb-1" key={index}>
+          <p className="w-fit bg-[#79c7c5] py-2 px-4 rounded-2xl text-[#f9fbff]">
+            {text}
+          </p>
         </div>
       );
   }
@@ -75,6 +81,7 @@ const ChatRoom = () => {
 
     if (msgRef.current !== null) {
       let msg = msgRef.current.value;
+      if (!msg) return;
       setHistory([...history, { type: "human", text: msg }]);
       setLoading(true);
       sendMessage(msg);
@@ -82,28 +89,49 @@ const ChatRoom = () => {
         if (historyBoxRef.current)
           historyBoxRef.current.scrollTop = historyBoxRef.current.scrollHeight;
       }, 100);
-      msg = "";
+      msgRef.current.value = "";
     }
   };
 
   return (
-    <div className="p-4 max-w-7xl flex flex-col flex-1 gap-3">
-      <div
-        ref={historyBoxRef}
-        className="flex-1 border p-4 overflow-auto chat-history text-sm flex flex-col gap-2 shadow-lg shadow-cyan-950"
-      >
+    <div
+      className="flex flex-col flex-1 max-w-md h-[450px] shadow-2xl bg-[#f9fbff] rounded-lg"
+      style={{ boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px" }}
+    >
+      <div className="p-4 flex justify-between">
+        <div className="flex items-center gap-2">
+          <div>
+            <img alt="" src="https://picsum.photos/g/40/40" />
+          </div>
+          <div>Kai Cheng</div>
+        </div>
+        <ul className="flex items-center gap-2">
+          <li>
+            <PhoneIcon className="h-6 w-6 p-1" />
+          </li>
+          <li>
+            <VideoCameraIcon className="h-6 w-6 p-1" />
+          </li>
+          <li>
+            <EllipsisVerticalIcon className="h-6 w-6 p-1" />
+          </li>
+        </ul>
+      </div>
+      <div ref={historyBoxRef} className="p-4 bg-[#eee] flex-1">
         {history.map((item, index) => {
           return ChatItem(item, index);
         })}
+        {loading ? <Thinking /> : null}
       </div>
-      <form className="flex gap-4" onSubmit={handleSumbit}>
+      <form className="flex p-4" onSubmit={handleSumbit}>
         <input
           ref={msgRef}
           type="text"
-          className="flex-1 border border-gray-700 rounded px-2"
+          className="flex-1 px-2 border-none"
+          placeholder="Type a message"
         />
-        <button className="border rounded px-4 py-1 bg-blue-400 text-white">
-          Send
+        <button className="rounded px-2 py-1 hover:text-[#79c7c5] focus:border-none">
+          <PaperAirplaneIcon className="w-6 h-6" />
         </button>
       </form>
     </div>
